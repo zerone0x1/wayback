@@ -6,28 +6,24 @@ if [ -z "$1" ] || [ ! -f "$1" ]; then
     exit 1
 fi
 
-echo -e "\033[0;33mDetected new subdomain: \033[0;32m$subdomain\033[0m \033[0;33mwaiting for 5 seconds...\033[0m" 
-# Variable to store the last subdomain
-last_subdomain=""
+# Initialize a variable to keep track of the last printed target domain
+last_target=""
 
-# Read unique URLs, strip scheme + domain + port, ignore .js files
+# Read unique URLs, extract paths, and group by domain
 sort -u "$1" | while IFS= read -r url; do
-    # Extract the subdomain and path
-    subdomain=$(echo "$url" | sed -E 's|https?://([^/]+).*|\1|' | cut -d'.' -f1-2)  # Extract main subdomain (e.g., sub.domain.com)
-    path=$(echo "$url" | sed -E 's|https?://[^/]+||')  # Strip scheme and domain
+    # Extract the domain (with scheme) and the path
+    domain=$(echo "$url" | sed -E 's|https?://([^/]+).*|\1|')  # Get domain from URL
+    path=$(echo "$url" | sed -E 's|https?://[^/]+||')  # Extract path, remove scheme and domain
 
-    # Skip if the path ends with .js
-    if [[ "$path" == *.js ]]; then
-        continue
+    # Check if the domain has changed
+    if [[ "$domain" != "$last_target" ]]; then
+        # If the domain has changed, print the target in yellow
+        echo -e "\033[1;33mTarget: https://$domain\033[0m"
+        last_target="$domain"
     fi
 
-    # If the subdomain has changed, wait for 5 seconds
-    if [[ "$subdomain" != "$last_subdomain" && -n "$last_subdomain" ]]; then
-        echo -e "\033[0;33mDetected new subdomain: \033[0;32m$subdomain\033[0m \033[0;33mwaiting for 5 seconds...\033[0m"  # Yellow for message, green for subdomain
-        sleep 5
+    # If path is not empty, print it (skip empty paths)
+    if [[ -n "$path" ]]; then
+        echo "$path"
     fi
-
-    # Output the path and update the last subdomain
-    echo "$path"
-    last_subdomain="$subdomain"
 done
