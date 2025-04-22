@@ -1,5 +1,6 @@
 This script is valuable in bug bounty hunting because it helps with organizing discovered URLs, focusing your testing efforts on unique and relevant paths, and saving time during data gathering and testing phases. It can be particularly useful in recon, vulnerability mapping, and fuzzing tasks.
 This code can be very useful for bug bounty hunters for several reasons. It automates the process of extracting paths from a list of URLs  and organizing them by domain. Here's how this fits into the bug bounty
+
 install:
 
 git clone https://github.com/zerone0x1/wayback.git
