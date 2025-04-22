@@ -4,6 +4,7 @@ This code can be very useful for bug bounty hunters for several reasons. It auto
 install:
 
 git clone https://github.com/zerone0x1/wayback.git
+
 Usage:
 
 bash endpoint-path.sh urls.txt
